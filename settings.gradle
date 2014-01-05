@@ -1,0 +1,1 @@
+include "ejb", "util", "web", "ear", "test"
