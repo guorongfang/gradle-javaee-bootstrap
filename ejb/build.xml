@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project name="Ejb_HelloWorld" basedir = "." default = "buildEar">
+<property file="${basedir}/developer.properties"/>
+<property name="jarname" 			value="HelloWorld-ejb" />
+<property name="appname" 			value="HelloWorld" />
+<property name="src"         		value="${basedir}/src"/>
+<property name="build"        		value="${basedir}/build"/>
+<property name="dist"        		value="${basedir}/dist"/>
+<property name="lib"        		value="${basedir}/lib" />
+<property name="src.server"         value="${src}/server"/>
+<property name="src.client"         value="${src}/client"/>
+<property name="build.server"       value="${build}/server"/>
+<property name="build.client"       value="${build}/client"/>
+<property name="dist.server"        value="${dist}/server"/>
+<property name="dist.client"        value="${dist}/client"/>
+
+<path id="dependencies">
+	<pathelement location="${lib}/javax.ejb_3.1.0.jar"/>
+	<pathelement location="${lib}/weblogic.jar"/>
+</path>
+
+<target name="clean" >
+	<echo> "Cleaning the directory " </echo>
+	<delete dir="${build}" />
+	<delete dir="${dist}" />
+</target>
+
+<target name="compile" depends="clean">
+	<echo> "Compiling EJB" </echo>
+	<echo message="BEA_HOME: ${BEA_HOME}"/>
+	<echo message="WLS_HOME: ${WLS_HOME}"/>
+	<mkdir dir="${build}/server/classes"/>
+	<javac srcdir="${src.server}" destdir="${build}/server/classes" debug="on" >
+		<classpath refid="dependencies"/>
+	</javac>
+</target>
+
+<target name="compileClient">
+	<echo> "Compiling Client class " </echo>
+	<mkdir dir="${build.client}/classes"/>
+	<javac srcdir="${src.client}" destdir="${build.client}/classes" debug="on" >
+		<classpath refid="dependencies"/>
+		<classpath location="${build.server}/classes" />
+	</javac>
+</target>
+
+<target name = "buildEar" depends="compile">
+	<echo> "Building EJB EAR" </echo>
+	<mkdir dir="${dist.server}"/>
+	<jar jarfile = "${dist.server}/${jarname}.jar" basedir = "${build}/server/classes"  />
+	<jar jarfile = "${dist.server}/${appname}.ear"  basedir="${dist.server}" />
+</target>
+
+<target name="run" depends="compileClient">
+	<echo message="Executing client class"> </echo>
+	<java classname= "com.mentor.demo.HelloWorldClient" fork="yes">
+	<classpath>
+		<pathelement location="${build.client}/classes"/>
+		<pathelement location="${dist.server}/HelloWorld-ejb.jar"/>
+		<pathelement location="${lib}/wlfullclient.jar"/>
+	</classpath>
+	</java>
+</target>
+
+</project>

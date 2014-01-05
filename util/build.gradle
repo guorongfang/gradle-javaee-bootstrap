@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+
+test {
+   // enable TestNG support (default is JUnit)
+   useTestNG()
+}
+
+dependencies {    
+    // Remote EJB Client dependencies    
+//    compile "org.jboss.as:jboss-as-ejb-client-bom:${as7Version}"    
+//    compile "org.jboss.as:jboss-as-jms-client-bom:${as7Version}"    
+//    compile 'javax.persistence:persistence-api:1.0'    
+//    compile 'log4j:log4j:1.2.16'    
+//    compile project(':version')    
+//    compile project(':util')    
+//    testCompile "org.hornetq:hornetq-core-client:2.2.5.Final"    
+//    testCompile "org.jboss.netty:netty:3.2.1.Final"    
+//    testCompile 'testng:testng:6.1.1'
+
+	testCompile group: 'org.testng', name: 'testng', version: '6.8'
+	testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.0'
+
+}
